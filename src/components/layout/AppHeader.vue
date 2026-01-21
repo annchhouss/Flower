@@ -15,7 +15,7 @@ const handleLogin = () => {
       <div class="app-header__inner">
         <div class="app-header__logo">
           <slot name="logo">
-            <h1>Digital Solutions</h1>
+            <img src="/src/assets/images/main-logo.png" alt="Logo">
           </slot>
         </div>
         
@@ -41,10 +41,9 @@ const handleLogin = () => {
           <slot name="actions">
             <AppButton 
               size="medium" 
-              variant="outline"
               @click="handleLogin"
             >
-              Войти
+              Связатсья с нами
             </AppButton>
           </slot>
         </div>
@@ -55,25 +54,20 @@ const handleLogin = () => {
 
 <style scoped>
 .app-header {
-  background: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: #262626;
+  border-bottom: 1px solid #676767;
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
 .app-header__inner {
+  max-width: 1600px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 0;
-}
-
-.app-header__logo h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #2563eb;
-  margin: 0;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .app-header__nav {
@@ -85,53 +79,28 @@ const handleLogin = () => {
 .app-header__menu {
   display: flex;
   list-style: none;
-  gap: 32px;
   margin: 0;
   padding: 0;
 }
 
 .app-header__menu-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
-  color: #4b5563;
+  font-family: 'Barlow', sans-serif;
+  color: #ffffff;
   font-weight: 500;
-  font-size: 16px;
-  transition: color 0.3s ease;
-  position: relative;
-  padding: 8px 0;
+  font-size: 18px;
+  padding: 14px 28px;
+  transition: all 0.3s ease;
+  width: 180px;
 }
 
-.app-header__menu-link:hover {
-  color: #2563eb;
-}
-
+.app-header__menu-link:hover,
 .app-header__menu-link--active {
-  color: #2563eb;
-  font-weight: 600;
-}
-
-.app-header__menu-link--active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: #2563eb;
-}
-
-.app-header__menu-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: #2563eb;
-  transition: width 0.3s ease;
-}
-
-.app-header__menu-link:hover::after {
-  width: 100%;
+  background: #3c3c3c;
+  border-radius: 8px;
 }
 
 .app-header__actions {

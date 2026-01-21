@@ -1,21 +1,13 @@
 <script setup>
-import { ref, computed } from 'vue'
+import {ref, computed} from 'vue'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import AppButton from '@/components/ui/AppButton.vue'
 import AppBanner from '@/components/ui/AppBanner.vue'
 import AppFeatureCard from '@/components/ui/AppFeatureCard.vue'
 import AppExpandItem from '@/components/ui/AppExpandItem.vue'
-import {
-  heroBanner,
-  miniBanner,
-  features,
-  additionalBanner,
-  faqItems,
-  contactForm
-} from '@models/homeData'
+import {heroBanner, miniBanner, features, additionalBanner, faqItems, contactForm} from '@models/homeData'
 
-// Состояние формы
 const form = ref({
   name: '',
   email: '',
@@ -24,20 +16,16 @@ const form = ref({
   message: ''
 })
 
-// Состояние FAQ
 const faqState = ref(faqItems.map(item => ({ ...item })))
 
-// Вычисляемые свойства
 const firstThreeFeatures = computed(() => features.slice(0, 3))
 
-// Методы
 const handleLogin = () => {
   console.log('Login clicked')
 }
 
 const handleSubmit = () => {
   console.log('Form submitted:', form.value)
-  // Здесь будет отправка формы
   alert('Заявка отправлена! Мы свяжемся с вами в течение 24 часов.')
   resetForm()
 }
@@ -60,30 +48,28 @@ const toggleFaq = (index) => {
 <template>
   <div class="home-view">
     <AppHeader @login="handleLogin" />
-    
     <main>
-      <!-- Герой-баннер -->
-      <section class="hero-section section">
-        <div class="container">
-          <div class="hero-content">
-            <h1 class="hero-title">{{ heroBanner.title }}</h1>
-            <p class="hero-description">{{ heroBanner.description }}</p>
-            <div class="hero-actions">
-              <AppButton
-                v-for="button in heroBanner.buttons"
-                :key="button.id"
-                :variant="button.variant"
-                :size="button.size"
-                class="hero-button"
-              >
-                {{ button.text }}
-              </AppButton>
-            </div>
+      <section class="hero-section container">
+        <div class="hero-content">
+          <h1
+            class="hero-title"
+            v-html=heroBanner.title
+          />
+          <p class="hero-description">{{ heroBanner.description }}</p>
+          <div class="hero-actions">
+            <AppButton
+              v-for="button in heroBanner.buttons"
+              :key="button.id"
+              :variant="button.variant"
+              :size="button.size"
+              class="hero-button"
+            >
+              {{ button.text }}
+            </AppButton>
           </div>
         </div>
       </section>
 
-      <!-- Мини-баннер -->
       <section class="section">
         <div class="container">
           <AppBanner
@@ -94,7 +80,6 @@ const toggleFaq = (index) => {
         </div>
       </section>
 
-      <!-- Преимущества (3 шт) -->
       <section class="section">
         <div class="container">
           <h2 class="section-title">Наши преимущества</h2>
@@ -110,7 +95,6 @@ const toggleFaq = (index) => {
         </div>
       </section>
 
-      <!-- Дополнительный баннер -->
       <section class="section">
         <div class="container">
           <AppBanner
@@ -121,7 +105,6 @@ const toggleFaq = (index) => {
         </div>
       </section>
 
-      <!-- Еще 4 преимущества -->
       <section class="section">
         <div class="container">
           <h2 class="section-title">Почему выбирают нас</h2>
@@ -137,7 +120,6 @@ const toggleFaq = (index) => {
         </div>
       </section>
 
-      <!-- FAQ -->
       <section class="section">
         <div class="container">
           <h2 class="section-title">Часто задаваемые вопросы</h2>
@@ -155,7 +137,6 @@ const toggleFaq = (index) => {
         </div>
       </section>
 
-      <!-- Форма заявки -->
       <section class="section contact-section">
         <div class="container">
           <div class="contact-wrapper">
@@ -251,10 +232,12 @@ const toggleFaq = (index) => {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: #262626;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1600px;
+  width: 100%;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -284,10 +267,11 @@ const toggleFaq = (index) => {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
-/* Герой секция */
 .hero-section {
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-  padding: 120px 0;
+  padding: 112px 0 274px 0;
+  background-image: url('/src/assets/images/main-banner.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .hero-content {
@@ -301,7 +285,8 @@ const toggleFaq = (index) => {
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 24px;
-  color: #1f2937;
+  font-family: 'TT Travels', sans-serif;
+  color: #ffffff;
 }
 
 .hero-description {

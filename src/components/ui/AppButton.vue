@@ -5,7 +5,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'primary',
-    validator: (value) => ['primary', 'secondary', 'outline', 'dark', 'light'].includes(value)
+    validator: (value) => ['primary'].includes(value)
   },
   size: {
     type: String,
@@ -66,47 +66,13 @@ const handleClick = (event) => {
 }
 
 .app-button--primary {
-  background-color: #2563eb;
-  color: white;
+  background-color: #D8FF99;
+  color: #262626;
 }
 
 .app-button--primary:hover:not(.app-button--disabled) {
-  background-color: #1d4ed8;
-  transform: translateY(-2px);
+  background-color: #8eac5f;
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-}
-
-.app-button--secondary {
-  background-color: #10b981;
-  color: white;
-}
-
-.app-button--secondary:hover:not(.app-button--disabled) {
-  background-color: #059669;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-}
-
-.app-button--outline {
-  background-color: transparent;
-  color: #2563eb;
-  border: 2px solid #2563eb;
-}
-
-.app-button--outline:hover:not(.app-button--disabled) {
-  background-color: #2563eb;
-  color: white;
-}
-
-.app-button--dark {
-  background-color: #1f2937;
-  color: white;
-}
-
-.app-button--light {
-  background-color: #f9fafb;
-  color: #1f2937;
-  border: 1px solid #e5e7eb;
 }
 
 .app-button--small {
@@ -115,8 +81,8 @@ const handleClick = (event) => {
 }
 
 .app-button--medium {
-  padding: 12px 24px;
-  font-size: 16px;
+  padding: 16px 24px;
+  font-size: 18px;
 }
 
 .app-button--large {

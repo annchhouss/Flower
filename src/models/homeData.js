@@ -1,13 +1,12 @@
 export const menuItems = [
   { id: 1, title: 'Главная', link: '/' },
-  { id: 2, title: 'Услуги', link: '/services' },
-  { id: 3, title: 'О нас', link: '/about' },
-  { id: 4, title: 'Портфолио', link: '/portfolio' },
-  { id: 5, title: 'Контакты', link: '/contacts' }
+  { id: 2, title: 'Наши работы', link: '/works' },
+  { id: 3, title: 'Процесс', link: '/process' },
+  { id: 4, title: 'О нас', link: '/about' },
 ]
 
 export const heroBanner = {
-  title: 'Создаем цифровые решения для вашего бизнеса',
+  title: ' Студия декора <br /> Для Тебя',
   description: 'Профессиональная разработка сайтов, мобильных приложений и CRM-систем. Более 100 успешных проектов.',
   buttons: [
     { id: 1, text: 'Начать проект', variant: 'primary', size: 'large' },
