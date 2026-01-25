@@ -45,39 +45,40 @@ import { footerData } from '@models/homeData'
   </footer>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+@use '@/assets/styles/variables' as *;
+@use '@/assets/styles/mixins' as *;
+
 .app-footer {
-  background-color: #1f2937;
-  color: white;
-  padding-top: 60px;
+  background-color: $color-dark-light;
+  color: $color-light;
+  padding-top: $spacing-4xl;
   margin-top: auto;
 }
 
 .app-footer__top {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 40px;
-  padding-bottom: 40px;
-  border-bottom: 1px solid #374151;
+  @include container;
+  @include grid-auto-fit(250px, $spacing-xl);
+  padding-bottom: $spacing-xl;
+  border-bottom: 1px solid $color-dark-lighter;
 }
 
 .app-footer__logo h2 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 15px;
+  @include heading-small;
+  color: $color-light;
+  margin-bottom: $spacing-md;
 }
 
 .app-footer__copyright {
-  color: #9ca3af;
-  font-size: 0.9rem;
+  color: $color-text-lighter;
+  font-size: $font-size-sm;
 }
 
 .app-footer__section-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: white;
+  @include heading-small;
+  font-size: $font-size-xl;
+  margin-bottom: $spacing-lg;
+  color: $color-light;
 }
 
 .app-footer__links {
@@ -87,53 +88,53 @@ import { footerData } from '@models/homeData'
 }
 
 .app-footer__links li {
-  margin-bottom: 12px;
+  margin-bottom: $spacing-md;
 }
 
 .app-footer__link {
-  color: #d1d5db;
+  color: $color-gray-dark;
   text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.app-footer__link:hover {
-  color: white;
+  transition: color $transition-base;
+  
+  &:hover {
+    color: $color-primary;
+  }
 }
 
 .app-footer__social {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  flex-decoration: column;
+  gap: $spacing-md;
 }
 
 .app-footer__social-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #d1d5db;
+  @include flex-center;
+  justify-content: flex-start;
+  gap: $spacing-md;
+  color: $color-gray-dark;
   text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.app-footer__social-link:hover {
-  color: white;
+  transition: color $transition-base;
+  
+  &:hover {
+    color: $color-primary;
+  }
 }
 
 .app-footer__social-icon {
-  font-size: 1.2rem;
+  font-size: $font-size-xl;
 }
 
 .app-footer__social-text {
-  font-size: 0.95rem;
+  font-size: $font-size-base;
 }
 
 .app-footer__bottom {
-  padding: 30px 0;
+  @include container;
+  padding: $spacing-xl 0;
   text-align: center;
 }
 
 .app-footer__bottom-content {
-  color: #9ca3af;
-  font-size: 0.9rem;
+  color: $color-text-lighter;
+  font-size: $font-size-sm;
 }
 </style>

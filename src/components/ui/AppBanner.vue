@@ -37,34 +37,43 @@ const hasImage = computed(() => !!slots.image)
   </section>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+@use '@/assets/styles/variables' as *;
+@use '@/assets/styles/mixins' as *;
+
 .app-banner {
   display: flex;
   align-items: center;
-  padding: 60px;
-  border-radius: 16px;
-  gap: 40px;
+  padding: $spacing-4xl;
+  border-radius: $radius-xl;
+  gap: $spacing-xl;
+  
+  @include respond-to(max-md) {
+    flex-direction: column;
+    padding: $spacing-3xl;
+  }
 }
 
 .app-banner--primary {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  color: white;
+  background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-dark 100%);
+  color: $color-light;
 }
 
 .app-banner--secondary {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: white;
+  background: linear-gradient(135deg, $color-success 0%, $color-success-dark 100%);
+  color: $color-light;
 }
 
 .app-banner--dark {
-  background-color: #1f2937;
-  color: white;
+  background-color: $color-dark-light;
+  color: $color-light;
+  border: 1px solid $color-dark-lighter;
 }
 
 .app-banner--light {
-  background-color: #f9fafb;
-  color: #1f2937;
-  border: 1px solid #e5e7eb;
+  background-color: $color-light-gray;
+  color: $color-text;
+  border: 1px solid $color-gray;
 }
 
 .app-banner__content {
@@ -72,31 +81,30 @@ const hasImage = computed(() => !!slots.image)
 }
 
 .app-banner__title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 20px;
-  line-height: 1.2;
+  @include heading-medium;
+  margin-bottom: $spacing-lg;
 }
 
 .app-banner__description {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 30px;
+  font-size: 18px;
+  line-height: $line-height-relaxed;
+  margin-bottom: $spacing-xl;
   opacity: 0.9;
 }
 
 .app-banner__actions {
   display: flex;
-  gap: 15px;
+  gap: $spacing-md;
+  flex-wrap: wrap;
 }
 
 .app-banner__image {
   flex: 1;
   text-align: center;
-}
-
-.app-banner__image img {
-  max-width: 100%;
-  border-radius: 8px;
+  
+  img {
+    max-width: 100%;
+    border-radius: $radius-md;
+  }
 }
 </style>

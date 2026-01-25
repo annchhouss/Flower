@@ -1,27 +1,41 @@
 <script setup>
 import {ref, computed} from 'vue'
+import { RouterLink } from 'vue-router'
 import AppHeader from '@/components/layout/AppHeader.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import AppButton from '@/components/ui/AppButton.vue'
-import AppBanner from '@/components/ui/AppBanner.vue'
 import AppFeatureCard from '@/components/ui/AppFeatureCard.vue'
 import AppExpandItem from '@/components/ui/AppExpandItem.vue'
-import {heroBanner, miniBanner, features, additionalBanner, faqItems, contactForm} from '@models/homeData'
+import AppContactModal from '@/components/ui/AppContactModal.vue'
+import {
+  heroBanner,
+  servicesSection,
+  services,
+  whyChooseUsBanner,
+  features,
+  faqSection,
+  faqItems,
+  contactSection,
+  eventTypes
+} from '@models/homeData'
 
 const form = ref({
   name: '',
   email: '',
-  companyType: 'startup',
-  budget: 50,
+  eventType: 'wedding',
+  budget: [10000, 50000],
   message: ''
 })
 
 const faqState = ref(faqItems.map(item => ({ ...item })))
-
-const firstThreeFeatures = computed(() => features.slice(0, 3))
+const showContactModal = ref(false)
 
 const handleLogin = () => {
   console.log('Login clicked')
+}
+
+const handleContact = () => {
+  showContactModal.value = true
 }
 
 const handleSubmit = () => {
@@ -34,8 +48,8 @@ const resetForm = () => {
   form.value = {
     name: '',
     email: '',
-    companyType: 'startup',
-    budget: 50,
+    eventType: 'wedding',
+    budget: [10000, 50000],
     message: ''
   }
 }
@@ -49,66 +63,80 @@ const toggleFaq = (index) => {
   <div class="home-view">
     <AppHeader @login="handleLogin" />
     <main>
-      <section class="hero-section container">
-        <div class="hero-content">
-          <h1
-            class="hero-title"
-            v-html=heroBanner.title
-          />
-          <p class="hero-description">{{ heroBanner.description }}</p>
-          <div class="hero-actions">
-            <AppButton
-              v-for="button in heroBanner.buttons"
-              :key="button.id"
-              :variant="button.variant"
-              :size="button.size"
-              class="hero-button"
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-overlay">
+          <div class="container">
+            <div class="hero-content">
+              <h1 class="hero-title">
+                <span class="hero-title__line">{{ heroBanner.title }}</span>
+                <span class="hero-title__line">{{ heroBanner.subtitle }}</span>
+              </h1>
+              <div class="hero-categories">
+                <button
+                  v-for="category in heroBanner.categories"
+                  :key="category.id"
+                  class="category-button"
+                >
+                  {{ category.text }}
+                </button>
+              </div>
+              <div class="hero-actions">
+                <AppButton
+                  v-for="button in heroBanner.buttons"
+                  :key="button.id"
+                  :variant="button.variant"
+                  :size="button.size"
+                  class="hero-button"
+                  :to="button.id === 1 ? '/works' : null"
+                  @click="button.id === 2 ? handleContact() : null"
+                >
+                  {{ button.text }}
+                </AppButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services Section -->
+      <section class="services-section section">
+        <div class="container">
+          <h2 class="section-title">{{ servicesSection.title }}</h2>
+          <p class="section-description">{{ servicesSection.description }}</p>
+        </div>
+      </section>
+
+      <!-- Three Services Columns -->
+      <section class="services-columns section">
+        <div class="container">
+          <div class="services-grid">
+            <div
+              v-for="service in services"
+              :key="service.id"
+              class="service-card"
             >
-              {{ button.text }}
-            </AppButton>
+              <h3 class="service-card__title">{{ service.title }}</h3>
+              <p class="service-card__description">{{ service.description }}</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="section">
-        <div class="container">
-          <AppBanner
-            :title="miniBanner.title"
-            :description="miniBanner.description"
-            :variant="miniBanner.variant"
-          />
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <h2 class="section-title">Наши преимущества</h2>
-          <div class="grid grid-3">
-            <AppFeatureCard
-              v-for="feature in firstThreeFeatures"
-              :key="feature.id"
-              :title="feature.title"
-              :description="feature.description"
-              :icon="feature.icon"
-            />
+      <!-- Why Choose Us Banner -->
+      <section class="why-choose-us section">
+        <div class="why-choose-us__overlay">
+          <div class="container">
+            <h2 class="why-choose-us__title">{{ whyChooseUsBanner.title }}</h2>
+            <p class="why-choose-us__description">{{ whyChooseUsBanner.description }}</p>
           </div>
         </div>
       </section>
 
-      <section class="section">
+      <!-- Features Section (4 cards in 2x2 grid) -->
+      <section class="features-section section">
         <div class="container">
-          <AppBanner
-            :title="additionalBanner.title"
-            :description="additionalBanner.description"
-            :variant="additionalBanner.variant"
-          />
-        </div>
-      </section>
-
-      <section class="section">
-        <div class="container">
-          <h2 class="section-title">Почему выбирают нас</h2>
-          <div class="grid grid-4">
+          <div class="features-grid">
             <AppFeatureCard
               v-for="feature in features"
               :key="feature.id"
@@ -120,14 +148,24 @@ const toggleFaq = (index) => {
         </div>
       </section>
 
-      <section class="section">
+      <!-- FAQ Section -->
+      <section class="faq-banner section">
+        <div class="faq-banner__overlay">
+          <div class="container">
+            <h2 class="faq-banner__title">{{ faqSection.title }}</h2>
+            <p class="faq-banner__description">{{ faqSection.description }}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="faq-section section">
         <div class="container">
-          <h2 class="section-title">Часто задаваемые вопросы</h2>
           <div class="faq-container">
             <AppExpandItem
               v-for="(item, index) in faqState"
               :key="item.id"
               :title="item.title"
+              :number="item.number"
               :is-open="item.open"
               @toggle="toggleFaq(index)"
             >
@@ -137,322 +175,627 @@ const toggleFaq = (index) => {
         </div>
       </section>
 
-      <section class="section contact-section">
-        <div class="container">
-          <div class="contact-wrapper">
-            <div class="contact-info">
-              <h2 class="contact-title">{{ contactForm.title }}</h2>
-              <p class="contact-description">{{ contactForm.description }}</p>
-            </div>
-            
-            <form @submit.prevent="handleSubmit" class="contact-form">
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label">Имя</label>
-                  <input
-                    v-model="form.name"
-                    type="text"
-                    class="form-input"
-                    placeholder="Ваше имя"
-                    required
-                  />
-                </div>
-                
-                <div class="form-group">
-                  <label class="form-label">Email</label>
-                  <input
-                    v-model="form.email"
-                    type="email"
-                    class="form-input"
-                    placeholder="your@email.com"
-                    required
-                  />
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">Тип предприятия</label>
-                <select v-model="form.companyType" class="form-select">
-                  <option value="startup">Стартап</option>
-                  <option value="small">Малый бизнес</option>
-                  <option value="medium">Средний бизнес</option>
-                  <option value="large">Крупная компания</option>
-                </select>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">
-                  Бюджет: {{ form.budget }} тыс. руб.
-                </label>
-                <input
-                  v-model="form.budget"
-                  type="range"
-                  min="10"
-                  max="500"
-                  step="10"
-                  class="form-range"
-                />
-                <div class="range-labels">
-                  <span>10 тыс.</span>
-                  <span>500 тыс.</span>
-                </div>
-              </div>
-              
-              <div class="form-group">
-                <label class="form-label">Описание проекта</label>
-                <textarea
-                  v-model="form.message"
-                  class="form-textarea"
-                  placeholder="Расскажите о вашем проекте..."
-                  rows="4"
-                ></textarea>
-              </div>
-              
-              <AppButton
-                type="submit"
-                variant="primary"
-                size="large"
-                full-width
-                class="submit-button"
-              >
-                {{ contactForm.buttonText }}
+      <!-- Contact Section -->
+      <section class="contact-banner section">
+        <div class="contact-banner__overlay">
+          <div class="container">
+            <div class="contact-banner__content">
+              <p class="contact-banner__logo">для тебя</p>
+              <h2 class="contact-banner__title">{{ contactSection.title }}</h2>
+              <p class="contact-banner__description">{{ contactSection.description }}</p>
+              <AppButton variant="primary" size="large" class="contact-banner__button">
+                {{ contactSection.buttonText }}
               </AppButton>
-            </form>
+            </div>
           </div>
         </div>
       </section>
+
+      <section class="contact-form-section section">
+        <div class="container">
+          <form @submit.prevent="handleSubmit" class="contact-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Имя</label>
+                <input
+                  v-model="form.name"
+                  type="text"
+                  class="form-input"
+                  placeholder="Type here"
+                  required
+                />
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Почта</label>
+                <input
+                  v-model="form.email"
+                  type="email"
+                  class="form-input"
+                  placeholder="Type here"
+                  required
+                />
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Какое у Вас мероприятие?</label>
+              <div class="event-types">
+                <label
+                  v-for="eventType in eventTypes"
+                  :key="eventType.id"
+                  class="event-type-label"
+                >
+                  <input
+                    v-model="form.eventType"
+                    type="radio"
+                    :value="eventType.value"
+                    class="event-type-input"
+                  />
+                  <span class="event-type-text">{{ eventType.label }}</span>
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Ваш Бюджет</label>
+              <p class="form-sublabel">Slide to indicate your budget range</p>
+              <div class="budget-slider-wrapper">
+                <input
+                  v-model.number="form.budget[0]"
+                  type="range"
+                  min="10000"
+                  max="100000"
+                  step="1000"
+                  class="budget-slider"
+                />
+                <div class="budget-labels">
+                  <span>{{ form.budget[0] }}₽</span>
+                  <span>{{ form.budget[1] }}₽</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Ваше Сообщение</label>
+              <textarea
+                v-model="form.message"
+                class="form-textarea"
+                placeholder="Type here"
+                rows="4"
+              ></textarea>
+            </div>
+            
+            <AppButton
+              type="submit"
+              variant="primary"
+              size="large"
+              class="submit-button"
+            >
+              Отправить
+            </AppButton>
+          </form>
+        </div>
+      </section>
     </main>
-    
+
     <AppFooter />
+    
+    <!-- Contact Modal -->
+    <AppContactModal 
+      :is-open="showContactModal" 
+      @close="showContactModal = false" 
+    />
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+@use '@/assets/styles/variables' as *;
+@use '@/assets/styles/mixins' as *;
+
 .home-view {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: #262626;
-}
-
-.container {
-  max-width: 1600px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.section {
-  padding: 80px 0;
-}
-
-.section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 48px;
-  color: #1f2937;
-}
-
-.grid {
-  display: grid;
-  gap: 30px;
-}
-
-.grid-3 {
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-}
-
-.grid-4 {
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  flex-decoration: column;
+  background: $color-dark;
 }
 
 .hero-section {
-  padding: 112px 0 274px 0;
+  position: relative;
+  width: 100%;
+  min-height: 691px;
   background-image: url('/src/assets/images/main-banner.jpg');
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
+  
+  @include respond-to(max-sm) {
+    min-height: 500px;
+  }
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(26, 26, 26, 0.6);
+  display: flex;
+  align-items: center;
+  padding: 112px 0;
+  
+  @include respond-to(max-sm) {
+    padding: 80px 0;
+  }
 }
 
 .hero-content {
-  max-width: 800px;
+  max-width: 1280px;
   margin: 0 auto;
   text-align: center;
 }
 
 .hero-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  line-height: 1.2;
-  margin-bottom: 24px;
-  font-family: 'TT Travels', sans-serif;
-  color: #ffffff;
+  @include heading-large;
+  color: $color-light;
+  margin-bottom: $spacing-xl;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
 }
 
-.hero-description {
-  font-size: 1.25rem;
-  color: #6b7280;
-  margin-bottom: 40px;
-  line-height: 1.6;
+.hero-title__line {
+  display: block;
+}
+
+.hero-categories {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: $spacing-xl;
+  
+  @include respond-to(max-sm) {
+    gap: $spacing-sm;
+  }
+}
+
+.category-button {
+  padding: $spacing-sm $spacing-lg;
+  background: $color-dark-light;
+  color: $color-light;
+  border: 1px solid $color-dark-lighter;
+  border-radius: $radius-md;
+  @include text-base;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $color-dark-lighter;
+    border-color: $color-primary;
+  }
+  
+  @include respond-to(max-sm) {
+    padding: $spacing-xs $spacing-md;
+    font-size: $font-size-sm;
+  }
 }
 
 .hero-actions {
   display: flex;
-  gap: 20px;
+  gap: $spacing-lg;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .hero-button {
   min-width: 180px;
+  
+  @include respond-to(max-sm) {
+    width: 100%;
+    max-width: 300px;
+  }
 }
 
-/* FAQ */
+.section {
+  padding: $spacing-4xl 0;
+  
+  @include respond-to(max-sm) {
+    padding: $spacing-3xl 0;
+  }
+}
+
+.services-section {
+  background: $color-dark-light;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/src/assets/images/main-banner.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1;
+    filter: blur(10px);
+    z-index: 0;
+  }
+}
+
+.section-title {
+  @include heading-medium;
+  text-align: center;
+  margin-bottom: $spacing-lg;
+  color: $color-light;
+  position: relative;
+  z-index: 1;
+}
+
+.section-description {
+  font-size: 18px;
+  text-align: center;
+  color: $color-text-light;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: $line-height-relaxed;
+  position: relative;
+  z-index: 1;
+}
+
+.services-columns {
+  padding-top: 0;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-xl;
+  border-top: 1px solid $color-dark-light;
+  border-left: 1px solid $color-dark-light;
+  
+  @include respond-to(max-md) {
+    grid-template-columns: 1fr;
+    border-left: none;
+  }
+}
+
+.service-card {
+  padding: $spacing-3xl;
+  border-right: 1px solid $color-dark-light;
+  border-bottom: 1px solid $color-dark-light;
+  
+  @include respond-to(max-md) {
+    border-right: none;
+  }
+}
+
+.service-card__title {
+  @include heading-small;
+  color: $color-light;
+  margin-bottom: $spacing-lg;
+  font-size: $font-size-xl;
+}
+
+.service-card__description {
+  @include text-base;
+  color: $color-text-light;
+  line-height: $line-height-relaxed;
+}
+
+.why-choose-us {
+  padding: 0;
+  position: relative;
+  min-height: 400px;
+  background-image: url('/src/assets/images/main-banner.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  
+  @include respond-to(max-sm) {
+    min-height: 300px;
+  }
+}
+
+.why-choose-us__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(26, 26, 26, 0.7);
+  display: flex;
+  align-items: center;
+  padding: $spacing-4xl 0;
+}
+
+.why-choose-us__title {
+  @include heading-medium;
+  text-align: center;
+  color: $color-light;
+  margin-bottom: $spacing-lg;
+}
+
+.why-choose-us__description {
+  font-size: 18px;
+  text-align: center;
+  color: $color-text-light;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: $line-height-relaxed;
+}
+
+.features-section {
+  padding-top: $spacing-4xl;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-xl;
+  
+  @include respond-to(max-md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.faq-banner {
+  padding: 0;
+  position: relative;
+  min-height: 300px;
+  background-image: url('/src/assets/images/main-banner.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  
+  @include respond-to(max-sm) {
+    min-height: 250px;
+  }
+}
+
+.faq-banner__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(26, 26, 26, 0.7);
+  display: flex;
+  align-items: center;
+  padding: $spacing-4xl 0;
+}
+
+.faq-banner__title {
+  @include heading-medium;
+  text-align: center;
+  color: $color-light;
+  margin-bottom: $spacing-md;
+}
+
+.faq-banner__description {
+  @include text-base;
+  text-align: center;
+  color: $color-text-light;
+}
+
+.faq-section {
+  padding-top: $spacing-4xl;
+}
+
 .faq-container {
   max-width: 800px;
   margin: 0 auto;
 }
 
-/* Контактная форма */
-.contact-section {
-  background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+.contact-banner {
+  padding: 0;
+  position: relative;
+  min-height: 400px;
+  background-image: url('/src/assets/images/main-banner.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  
+  @include respond-to(max-sm) {
+    min-height: 350px;
+  }
 }
 
-.contact-wrapper {
-  max-width: 600px;
+.contact-banner__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(26, 26, 26, 0.7);
+  display: flex;
+  align-items: center;
+  padding: $spacing-4xl 0;
+}
+
+.contact-banner__content {
+  max-width: 800px;
   margin: 0 auto;
-  background: white;
-  padding: 48px;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-}
-
-.contact-info {
   text-align: center;
-  margin-bottom: 40px;
 }
 
-.contact-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 16px;
-  color: #1f2937;
+.contact-banner__logo {
+  font-family: $font-family-heading;
+  font-style: italic;
+  font-size: $font-size-xl;
+  color: $color-light;
+  margin-bottom: $spacing-lg;
+  opacity: 0.9;
 }
 
-.contact-description {
-  color: #6b7280;
-  font-size: 1.1rem;
+.contact-banner__title {
+  @include heading-medium;
+  color: $color-light;
+  margin-bottom: $spacing-lg;
 }
 
-/* Форма */
+.contact-banner__description {
+  font-size: 18px;
+  color: $color-text-light;
+  margin-bottom: $spacing-xl;
+  line-height: $line-height-relaxed;
+}
+
+.contact-banner__button {
+  margin-top: $spacing-lg;
+}
+
+.contact-form-section {
+  padding-top: $spacing-4xl;
+}
+
+.contact-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
 .form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 24px;
+  @include grid(2, $spacing-lg);
+  margin-bottom: $spacing-lg;
+  
+  @include respond-to(max-sm) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: $spacing-xl;
 }
 
 .form-label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #374151;
+  margin-bottom: $spacing-sm;
+  font-weight: $font-weight-medium;
+  color: $color-light;
+  @include text-base;
+}
+
+.form-sublabel {
+  @include text-sm;
+  color: $color-text-lighter;
+  margin-bottom: $spacing-md;
 }
 
 .form-input,
-.form-select,
 .form-textarea {
   width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 1rem;
+  padding: $spacing-md;
+  border: none;
+  border-bottom: 1px solid $color-dark-light;
+  @include text-base;
   font-family: inherit;
-  transition: border-color 0.3s ease;
-}
-
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-.form-range {
-  width: 100%;
-  height: 8px;
-  margin: 12px 0;
-  background: #e5e7eb;
-  border-radius: 4px;
-  outline: none;
-}
-
-.form-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 24px;
-  height: 24px;
-  background: #2563eb;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.range-labels {
-  display: flex;
-  justify-content: space-between;
-  color: #6b7280;
-  font-size: 0.9rem;
+  background: transparent;
+  color: $color-light;
+  transition: all $transition-base;
+  
+  &::placeholder {
+    color: $color-text-lighter;
+    font-style: italic;
+  }
+  
+  &:focus {
+    outline: none;
+    border-bottom-color: $color-primary;
+  }
 }
 
 .form-textarea {
   resize: vertical;
+  min-height: 120px;
+}
+
+.event-types {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+  
+  @include respond-to(max-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.event-type-label {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  padding: $spacing-sm;
+  border-radius: $radius-md;
+  transition: background $transition-base;
+  
+  &:hover {
+    background: $color-dark-light;
+  }
+}
+
+.event-type-input {
+  width: 20px;
+  height: 20px;
+  accent-color: $color-primary;
+  cursor: pointer;
+}
+
+.event-type-text {
+  color: $color-light;
+  @include text-base;
+}
+
+.budget-slider-wrapper {
+  margin-top: $spacing-md;
+}
+
+.budget-slider {
+  width: 100%;
+  height: 8px;
+  margin: $spacing-md 0;
+  background: $color-dark-light;
+  border-radius: $radius-sm;
+  outline: none;
+  -webkit-appearance: none;
+  
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: $color-primary;
+    border-radius: $radius-full;
+    cursor: pointer;
+  }
+  
+  &::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: $color-primary;
+    border-radius: $radius-full;
+    cursor: pointer;
+    border: none;
+  }
+}
+
+.budget-labels {
+  @include flex-between;
+  color: $color-light;
+  @include text-base;
+  margin-top: $spacing-sm;
 }
 
 .submit-button {
-  margin-top: 32px;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.5rem;
-  }
+  margin-top: $spacing-xl;
+  width: 100%;
   
-  .hero-actions {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .hero-button {
-    width: 100%;
-    max-width: 300px;
-  }
-  
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-  
-  .grid-3,
-  .grid-4 {
-    grid-template-columns: 1fr;
-  }
-  
-  .app-header__inner {
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .app-header__nav {
-    width: 100%;
-  }
-  
-  .app-header__menu {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+  @include respond-to(max-sm) {
+    width: auto;
+    float: right;
   }
 }
 </style>

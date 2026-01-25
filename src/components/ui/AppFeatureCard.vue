@@ -27,58 +27,69 @@ const hasIconSlot = computed(() => !!slots.icon)
         <span class="icon-text">{{ icon }}</span>
       </slot>
     </div>
-    <h3 class="app-feature-card__title" v-if="title">{{ title }}</h3>
-    <p class="app-feature-card__description" v-if="description">{{ description }}</p>
+    <div class="app-feature-card__content">
+      <h3 class="app-feature-card__title" v-if="title">{{ title }}</h3>
+      <p class="app-feature-card__description" v-if="description">{{ description }}</p>
+    </div>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+@use '@/assets/styles/variables' as *;
+@use '@/assets/styles/mixins' as *;
+
 .app-feature-card {
-  padding: 30px;
-  border-radius: 12px;
-  background: white;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  text-align: center;
+  @include card;
+  padding: $spacing-xl;
+  text-align: left;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.app-feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  flex-direction: row;
+  align-items: flex-start;
+  gap: $spacing-lg;
+  background: $color-dark-light;
+  border: 1px solid $color-dark-lighter;
+  
+  @include respond-to(max-sm) {
+    flex-direction: column;
+    text-align: center;
+  }
 }
 
 .app-feature-card__icon {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 25px;
-  color: white;
-  font-size: 32px;
+  width: 60px;
+  height: 60px;
+  background: $color-dark;
+  border-radius: $radius-md;
+  @include flex-center;
+  flex-shrink: 0;
+  color: $color-primary;
+  font-size: $font-size-2xl;
+  
+  @include respond-to(max-sm) {
+    margin: 0 auto;
+  }
 }
 
 .icon-text {
-  font-size: 24px;
+  font-size: $font-size-2xl;
+}
+
+.app-feature-card__content {
+  flex: 1;
 }
 
 .app-feature-card__title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-bottom: 15px;
-  color: #1f2937;
+  @include heading-small;
+  margin-bottom: $spacing-md;
+  color: $color-light;
+  font-size: $font-size-xl;
 }
 
 .app-feature-card__description {
-  color: #6b7280;
-  line-height: 1.6;
-  font-size: 1rem;
+  color: $color-text-light;
+  line-height: $line-height-relaxed;
+  @include text-base;
   margin: 0;
 }
 </style>

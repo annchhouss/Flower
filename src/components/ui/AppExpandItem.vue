@@ -4,6 +4,10 @@ const props = defineProps({
     type: String,
     required: true
   },
+  number: {
+    type: String,
+    default: ''
+  },
   isOpen: {
     type: Boolean,
     default: false
@@ -20,9 +24,10 @@ const toggle = () => {
 <template>
   <div class="app-expand-item" :class="{ 'app-expand-item--active': isOpen }">
     <div class="app-expand-item__header" @click="toggle">
+      <span v-if="number" class="app-expand-item__number">{{ number }}</span>
       <h3 class="app-expand-item__title">{{ title }}</h3>
       <span class="app-expand-item__toggle">
-        {{ isOpen ? '−' : '+' }}
+        {{ isOpen ? '×' : '+' }}
       </span>
     </div>
     <transition name="expand">
@@ -33,57 +38,79 @@ const toggle = () => {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+@use '@/assets/styles/variables' as *;
+@use '@/assets/styles/mixins' as *;
+
 .app-expand-item {
-  border-bottom: 1px solid #e5e7eb;
-  padding: 24px 0;
+  border-bottom: 1px solid $color-dark-light;
+  padding: $spacing-xl 0;
+  transition: border-color $transition-base;
 }
 
 .app-expand-item--active {
-  border-bottom-color: #2563eb;
+  border-bottom-color: $color-dark-light;
 }
 
 .app-expand-item__header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: $spacing-lg;
   cursor: pointer;
   user-select: none;
 }
 
+.app-expand-item__number {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  min-width: 60px;
+  flex-shrink: 0;
+  
+  @include respond-to(max-sm) {
+    min-width: 40px;
+    font-size: $font-size-xl;
+  }
+}
+
 .app-expand-item__title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
+  @include heading-small;
+  font-size: $font-size-xl;
+  color: $color-light;
   margin: 0;
+  flex: 1;
+  text-align: left;
 }
 
 .app-expand-item__toggle {
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: #2563eb;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-}
-
-.app-expand-item__toggle:hover {
-  background-color: #f3f4f6;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-normal;
+  color: $color-light;
+  width: 36px;
+  height: 36px;
+  @include flex-center;
+  border-radius: $radius-full;
+  transition: all $transition-base;
+  flex-shrink: 0;
+  
+  &:hover {
+    background-color: $color-dark-light;
+  }
 }
 
 .app-expand-item__content {
-  padding-top: 20px;
-  color: #6b7280;
-  line-height: 1.6;
+  padding-top: $spacing-lg;
+  color: $color-text-light;
+  line-height: $line-height-relaxed;
+  
+  p {
+    margin: 0;
+  }
 }
 
 .expand-enter-active,
 .expand-leave-active {
-  transition: height 0.3s ease;
+  transition: height $transition-base;
   overflow: hidden;
 }
 

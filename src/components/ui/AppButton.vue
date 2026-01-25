@@ -1,11 +1,12 @@
 <script setup>
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 
 const props = defineProps({
   variant: {
     type: String,
     default: 'primary',
-    validator: (value) => ['primary'].includes(value)
+    validator: (value) => ['primary', 'secondary', 'outline'].includes(value)
   },
   size: {
     type: String,
@@ -19,6 +20,14 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  to: {
+    type: String,
+    default: null
+  },
+  as: {
+    type: [String, Object],
+    default: 'button'
   }
 })
 
@@ -39,55 +48,64 @@ const handleClick = (event) => {
     emit('click', event)
   }
 }
+
+const isRouterLink = computed(() => {
+  return props.to || props.as === RouterLink || (typeof props.as === 'string' && props.as.toLowerCase() === 'routerlink')
+})
+
+const component = computed(() => {
+  if (isRouterLink.value) {
+    return RouterLink
+  }
+  return props.as === 'button' || !props.as ? 'button' : props.as
+})
 </script>
 
 <template>
-  <button
+  <component
+    :is="component"
     :class="buttonClasses"
+    :to="to"
+    :disabled="disabled && !isRouterLink"
     @click="handleClick"
-    :disabled="disabled"
   >
     <slot />
-  </button>
+  </component>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+@use '@/assets/styles/variables' as *;
+@use '@/assets/styles/mixins' as *;
+
 .app-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  outline: none;
-  font-family: inherit;
+  @include button-base;
 }
 
 .app-button--primary {
-  background-color: #D8FF99;
-  color: #262626;
+  @include button-primary;
 }
 
-.app-button--primary:hover:not(.app-button--disabled) {
-  background-color: #8eac5f;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+.app-button--secondary {
+  @include button-secondary;
+}
+
+.app-button--outline {
+  @include button-outline;
 }
 
 .app-button--small {
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-sm;
 }
 
 .app-button--medium {
-  padding: 16px 24px;
-  font-size: 18px;
+  padding: $spacing-md $spacing-lg;
+  font-size: $font-size-lg;
 }
 
 .app-button--large {
-  padding: 16px 32px;
-  font-size: 18px;
+  padding: $spacing-md $spacing-xl;
+  font-size: $font-size-lg;
 }
 
 .app-button--full {
@@ -97,10 +115,10 @@ const handleClick = (event) => {
 .app-button--disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.app-button--disabled:hover {
-  transform: none !important;
-  box-shadow: none !important;
+  
+  &:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
 }
 </style>
